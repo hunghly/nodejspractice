@@ -16,10 +16,11 @@
     "url": "https://github.com/hunghly/nodejspractice/issues"
   },
   "homepage": "https://github.com/hunghly/nodejspractice#readme",
-  "description": "",
   "dependencies": {
     "jquery": "^3.5.1",
     "moment": "^2.25.3",
     "request": "^2.88.2"
-  }
+  },
+  "devDependencies": {},
+  "description": ""
 }
