@@ -1,3 +1,4 @@
+/*
 let http = require('http');
 let moment = require('moment');
 let $ = require('jquery');
@@ -39,3 +40,51 @@ function serverCallback(req, res) {
 }
 
 http.createServer(serverCallback).listen(8080);
+*/
+
+let http = require('http');
+let request = require('request');
+
+let request_body = undefined;
+
+function createHTMLStringFromJson(retrieveData) {
+    let tableString = '';
+    for (let attribute in retrieveData[0]) {
+        if (typeof retrieveData[0][attribute] !== 'object') {
+            tableString +=
+                `<tr>
+                    <td>
+                       ${attribute}
+                    </td>
+                </tr>`;
+        }
+    }
+    let html_string = `<html lang="en"> 
+        <header>
+            <title>Data aggregator</title>
+        </header>
+        <body>
+            <table> 
+                ${tableString}
+            </table>
+        </body>
+    </html>`;
+
+    return html_string;
+}
+
+// https://www.bnefoodtrucks.com.au/api/1/trucks
+request('https://www.bnefoodtrucks.com.au/api/1/trucks', function(err, request_res, body) {
+    request_body = body;
+})
+
+http.createServer(function(req, res) {
+    if (request_body) {
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        console.log(JSON.parse(request_body)[0]);
+        res.end(createHTMLStringFromJson(JSON.parse(request_body)));
+    } else {
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.end('Nothing retrieved yet');
+    }
+}).listen(8080);
